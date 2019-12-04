@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb://localhost:27017/chacha",
+  "mongoURI": "mongodb+srv://ganzik:a09180918z@cluster0-szqbh.mongodb.net/chacha?retryWrites=true&w=majority",
   "jwtSecret": "dlejfldna"
 }
