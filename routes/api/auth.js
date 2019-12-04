@@ -12,6 +12,11 @@ require('dotenv').config();
 
 const User = require('../../models/User');
 
+router.get('/test', (req, res) => {
+  console.log('데이터 잘 받았다');
+  return res.json({ data: 'api 잘 작동한다' });
+});
+
 // @route    GET api/auth
 // @desc
 // @access   Public
