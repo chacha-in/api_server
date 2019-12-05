@@ -29,7 +29,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, username, corpName, corpId } = req.body;
+    const { email, password, username } = req.body;
 
     console.log(req.body);
 
@@ -42,24 +42,13 @@ router.post(
           .json({ errors: [{ msg: '이미 가입된 사용자 이메일 입니다' }] });
       }
 
-      if (!corpName && !corpId) {
-        user = new User({
-          email,
-          password,
-          username
-        });
-      } else {
-        user = new User({
-          email,
-          password,
-          username,
-          corporation: {
-            name: corpName,
-            corpId
-          },
-          role: 'corp'
-        });
-      }
+
+      user = new User({
+        email,
+        password,
+        username
+      });
+
 
       // salt를 생성하여 변수 salt에 담는다.
       const salt = await bcrypt.genSalt(10);
