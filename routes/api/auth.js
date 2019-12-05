@@ -55,7 +55,6 @@ router.post(
     check('password', 'Password is required').exists()
   ],
   async (req, res) => {
-    console.log('login api server 진입')
     // check에서 검증했을 때 에러가 발생하면 errors 변수에 담는다. 예를들어 이메일과 패스워드가 형식에 맞게 전달되면 에러는 발생하지 않고, 패스워드가 없이 전달되면 'Password is required'를 errors에 담는다.
     const errors = validationResult(req);
     console.log(errors);
@@ -70,7 +69,7 @@ router.post(
     try {
       // 요청받은 email 값을 데이터베이스에서 검증하여 user값에 넣는다
       let user = await User.findOne({ email });
-      console.log(user)
+
 
       // 만약 유저가 존재하지 않는다면 status 400 응답과 함께 에러 메시지를 나타낸다.
       if (!user) {
@@ -100,7 +99,7 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          console.log(token)
+
           res.json({ token });
         }
       );
