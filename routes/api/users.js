@@ -76,6 +76,7 @@ router.post(
           res.json({ token });
         }
       );
+      console.log('회원가입 완료')
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');

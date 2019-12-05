@@ -21,6 +21,7 @@ router.get('/test', (req, res) => {
 // @desc
 // @access   Public
 router.get('/', auth, async (req, res) => {
+  console.log('토큰 인증 하는 중')
 
   try {
     // .select("-password") password는 제외하고 불러온다
