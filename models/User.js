@@ -16,6 +16,9 @@ const UserSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 255
   },
+  avatar: {
+    type: String
+  },
   resetPasswordToken: {
     // 패스워드 재설정을 위한 임시토큰
     type: String

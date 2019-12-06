@@ -49,6 +49,7 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/toilets', require('./routes/api/toilets'));
 // app.use('/api/tags', require('./routes/api/tags'));
 
 // app.use("/api/controllers", require("./routes/controllers/media"));
