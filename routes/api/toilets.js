@@ -46,7 +46,7 @@ router.post(
         user: req.user.id
       });
 
-      const toilet = await newToilet.save();
+      const toilet = await newToilet.save()
 
       res.json(toilet);
     } catch (err) {
@@ -56,13 +56,13 @@ router.post(
   }
 );
 
-// @route    GET api/posts
-// @desc     Get all post
+// @route    GET api/toilets
+// @desc     Get all toilets
 // @access   Public
 router.get('/', async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
-    res.json(posts);
+    const toilets = await Toilet.find().sort({ date: -1 });
+    res.json(toilets);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
