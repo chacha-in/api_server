@@ -32,7 +32,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, description, latlng } = req.body
+    const { title, description, latlng, sex, forDisabled, diaperChangingTable } = req.body
 
     try {
       const user = await User.findById(req.user.id).select('-password');
@@ -43,7 +43,8 @@ router.post(
         latlng: latlng,
         username: user.username,
         // avatar: user.avatar,
-        user: req.user.id
+        user: req.user.id,
+        sex: sex, forDisabled: forDisabled, diaperChangingTable: diaperChangingTable
       });
 
       const toilet = await newToilet.save()

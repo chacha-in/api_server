@@ -26,7 +26,7 @@ const ToiletSchema = new Schema({
     type: String,
     enum: ['maleOnly', 'femaleOnly', 'both']
   },
-  disabled: {
+  forDisabled: {
     type: Boolean,
     default: false
   },
