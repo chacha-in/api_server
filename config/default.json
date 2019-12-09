@@ -1,4 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://아이디:비밀번호@cluster0-szqbh.mongodb.net/chacha?retryWrites=true&w=majority",
-  "jwtSecret": "dlejfldna"
-}
