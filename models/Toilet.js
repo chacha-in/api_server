@@ -22,6 +22,27 @@ const ToiletSchema = new Schema({
   username: {
     type: String
   },
+  sex: {
+    type: String,
+    enum: ['maleOnly', 'femaleOnly', 'both']
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  diaperChangingTable: {
+    type: Boolean,
+    default: false
+  },
+  stars: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "users"
+      },
+      star: Number
+    }
+  ],
   likes: [
     {
       user: {
