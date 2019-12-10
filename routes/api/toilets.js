@@ -62,7 +62,7 @@ router.post(
 // @access   Public
 router.get('/', async (req, res) => {
   try {
-    const toilets = await Toilet.find().sort({ date: -1 });
+    const toilets = await Toilet.find().sort({ date: -1 }).select('-bookmark -comments -likes -stars -__v');
     res.json(toilets);
   } catch (err) {
     console.error(err.message);
@@ -70,21 +70,23 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route    GET api/posts/:id
-// @desc     Get post by user ID
+
+
+// @route    GET api/toilets/:id
+// @desc     Get Toilet by ID
 // @access   Private
 router.get('/:id', auth, async (req, res) => {
   try {
     console.log(req.params.id);
-    const user = req.params.id;
-    const post = await Post.find({ user }).sort({ date: -1 });
-    console.log(post);
+    const _id = req.params.id;
+    const toilet = await Toilet.findOne({ _id })
+    console.log(toilet);
 
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+    if (!toilet) {
+      return res.status(404).json({ msg: 'Toilet not found' });
     }
 
-    res.json(post);
+    res.json(toilet);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
@@ -229,8 +231,8 @@ router.put('/like/:id', auth, async (req, res) => {
 //   }
 // });
 
-// @route    POST api/posts/comment/:id
-// @desc     Comment on a post
+// @route    POST api/toilets/comment/:id
+// @desc     Comment on a toilet
 // @access   Private
 router.post(
   '/comment/:id',
@@ -250,21 +252,20 @@ router.post(
 
     try {
       const user = await User.findById(req.user.id).select('-password');
-      const post = await Post.findById(req.params.id);
+      const toilet = await Toilet.findById(req.params.id);
 
       const newComment = {
         text: req.body.text,
-        imageurl: req.body.imageurl,
-        name: user.name,
+        username: user.username,
         avatar: user.avatar,
         user: req.user.id
       };
 
-      post.comments.unshift(newComment);
+      toilet.comments.unshift(newComment);
 
-      await post.save();
+      await toilet.save();
 
-      res.json(post.comments);
+      res.json(toilet.comments);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -272,15 +273,16 @@ router.post(
   }
 );
 
-// @route    DELETE api/posts/comment/:id/:comment_id
+// @route    DELETE api/toilets/comment/:id/:comment_id
 // @desc     Delete comment
 // @access   Private
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const toilet = await Toilet.findById(req.params.id);
+    console.log(toilet)
 
     // Pull out comment
-    const comment = post.comments.find(
+    const comment = toilet.comments.find(
       comment => comment.id === req.params.comment_id
     );
     // Make sure comment exists
@@ -294,15 +296,16 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     }
 
     // Get remove index
-    const removeIndex = post.comments
+    const removeIndex = toilet.comments
       .map(like => like.user.toString())
       .indexOf(req.user.id);
 
-    post.comments.splice(removeIndex, 1);
+    console.log(removeIndex)
+    toilet.comments.splice(removeIndex, 1);
 
-    await post.save();
+    await toilet.save();
 
-    res.json(post.comments);
+    res.json(toilet);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
