@@ -10,32 +10,7 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
-  name: {
-    type: String
-  },
-  imageurl: {
-    type: String
-  },
-  location: {
-    type: String
-  },
-  avatar: {
-    type: String
-  },
-  hashtags: [
-    {
-      type: String
-    }
-  ],
   likes: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: "users"
-      }
-    }
-  ],
-  bookmark: [
     {
       user: {
         type: Schema.Types.ObjectId,
@@ -52,12 +27,6 @@ const PostSchema = new Schema({
       text: {
         type: String,
         required: true
-      },
-      name: {
-        type: String
-      },
-      avatar: {
-        type: String
       },
       date: {
         type: Date,
