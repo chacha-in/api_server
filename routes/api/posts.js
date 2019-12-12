@@ -17,7 +17,10 @@ router.post(
   [
     auth,
     [
-      check('text', 'Text is required')
+      check('title', 'title is required')
+        .not()
+        .isEmpty(),
+      check('text', 'text is required')
         .not()
         .isEmpty()
     ]
@@ -31,88 +34,17 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
 
-      if (user.role === 'blacklist') {
-        return res.json('넌 글 못써');
-      }
-
-      var re = new RegExp(/(#[0-9a-zA-Z가-힝]+)/, 'g');
-
-      // 문자열 구하기
-      var searchString = req.body.text;
-
-      searchString = searchString.replace(/</g, '&lt;');
-
-      var matchArray;
-      var resultString = '<div>';
-      var first = 0;
-      var last = 0;
-      var hashtagArray = [];
-      var standByTag = '';
-
-      // 각각의 일치하는 부분 검색
-      while ((matchArray = re.exec(searchString)) != null) {
-        last = matchArray.index;
-
-        // 일치하는 모든 문자열을 연결
-        resultString += searchString.substring(first, last);
-        matchArray[0] = matchArray[0].replace(' ', '');
-        // "<a href='/api/routes/search/matchArray[0]'>" + matchArray[0] + "</a>"
-        // 일치하는 부분에 강조 스타일이 지정된 class 추가
-        resultString +=
-          `<a href='/t/${matchArray[0].replace('#', '')}'>` +
-          matchArray[0] +
-          '</a>';
-
-        first = re.lastIndex;
-        // RegExp 객체의 lastIndex 속성을 이용해 검색 결과의 마지막 인덱스 접근 가능
-        console.log(matchArray[0]);
-
-        standByTag = matchArray[0].replace('#', '');
-
-        hashtagArray.push(standByTag);
-
-        console.log(hashtagArray);
-      }
-
-      // 문자열 종료
-      resultString += searchString.substring(first, searchString.length);
-      resultString += '</div>';
-
       const newPost = new Post({
-        hashtags: hashtagArray,
-        text: resultString,
-        imageurl: req.body.imageurl,
-        name: user.name,
-        avatar: user.avatar,
+        title: req.body.title,
+        text: req.body.text,
         user: req.user.id
       });
 
       const post = await newPost.save();
 
       res.json(post);
+      console.log(post)
 
-      const post_id = post.id;
-
-      for (let i = 0; i < hashtagArray.length; i++) {
-        console.log(hashtagArray[i]);
-        console.log(post_id);
-        const tag = await Tag.findOne({ tag: hashtagArray[i] });
-
-        console.log(tag);
-
-        if (tag === null) {
-          const newTag = new Tag({
-            tag: hashtagArray[i],
-            postId: post_id
-          });
-
-          await newTag.save();
-        } else {
-          tag.postId.unshift(post_id);
-          console.log(tag);
-          await tag.save();
-        }
-      }
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -126,6 +58,20 @@ router.post(
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    GET api/posts/page/:page_number
+// @desc     페이지 숫자만큼 가져오기
+// @access   Public
+router.get('/page/:page_number', async (req, res) => {
+  const page = req.params.page_number
+  try {
+    const posts = await Post.find().sort({ date: -1 }).skip((page - 1) * 10).limit(10);
     res.json(posts);
   } catch (err) {
     console.error(err.message);
