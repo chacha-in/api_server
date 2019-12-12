@@ -297,11 +297,13 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 
     // Get remove index
     const removeIndex = toilet.comments
-      .map(like => like.user.toString())
-      .indexOf(req.user.id);
+      .map(comment => comment._id.toString())
+      .indexOf(req.params.comment_id);
 
     console.log(removeIndex)
     toilet.comments.splice(removeIndex, 1);
+
+    console.log(toilet)
 
     await toilet.save();
 
