@@ -263,9 +263,6 @@ router.post(
 
       const newComment = {
         text: req.body.text,
-        imageurl: req.body.imageurl,
-        name: user.name,
-        avatar: user.avatar,
         user: req.user.id
       };
 
